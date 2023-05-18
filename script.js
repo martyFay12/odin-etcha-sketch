@@ -1,5 +1,12 @@
+// GLobal vars
 const mainContainer = document.querySelector(".main-container");
-createEtchaSketch(10, "normal-mode");
+let currentMode = "normal-mode";
+let currentGridSize = 10;
+
+//make initial sketchpad
+createEtchaSketch(currentGridSize, "normal-mode");
+
+// add event listeners to buttons
 const resizeGridButton = document.querySelector("#change-grid");
 resizeGridButton.addEventListener("click", newGrid);
 const colorModeButton = document.querySelector("#color-draw-mode");
@@ -8,8 +15,6 @@ const shadeModeButton = document.querySelector("#shade-draw-mode");
 shadeModeButton.addEventListener("click", shadeMode);
 const normalModeButton = document.querySelector("#normal-mode");
 normalModeButton.addEventListener("click", normalMode);
-let currentMode = "normal-mode";
-let currentGridSize = 10;
 
 function createEtchaSketch(gridSize, mode) {
   for (let i = 0; i < gridSize; i++) {
@@ -34,6 +39,7 @@ function createEtchaSketch(gridSize, mode) {
 
 function newGrid() {
   let gridSize = currentGridSize;
+  // only change grid size if this call was the result of a 'custom grid size' button push.
   if (this.id === "change-grid") {
     gridSize = newGridSize();
     currentGridSize = gridSize;
@@ -68,11 +74,10 @@ function colorMode() {
 }
 
 function weirdInk() {
-  this.style.cssText = `background-color: rgb(${Math.floor(
+  // assigns a random rgb color to the div that called function.
+  this.style.backgroundColor = `rgb(${Math.floor(
     Math.random() * 256
-  )}, ${Math.floor(Math.random() * 256)}, ${Math.floor(
-    Math.random() * 256
-  )});flex: 1;width: auto;height: auto;`;
+  )}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
 }
 
 function shadeMode() {
@@ -81,14 +86,19 @@ function shadeMode() {
 }
 
 function shadeInk() {
+  let alpha;
+  // if color is already black just return, in this case the length will be 22.
   if (getComputedStyle(this).backgroundColor.length === 22) {
     return;
+    // if color has alpha value of 1, getComputedStyle(this) just returns rgb
+    // so the length is only 18, in this case just manually set to 0.9
   } else if (getComputedStyle(this).backgroundColor.length === 18) {
-    this.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
-    return;
+    alpha = 0.9;
   } else {
+    // the length is 24, and the alpha value is in range 0.1 - 0.9, so set
+    // alpha to the 3 characters after the 3rd comma, and then subtract 0.1
     alpha =
       parseFloat(getComputedStyle(this).backgroundColor.split(",")[3]) - 0.1;
-    this.style.backgroundColor = `rgba(255,255,255,${alpha})`;
   }
+  this.style.backgroundColor = `rgba(255,255,255,${alpha})`;
 }
