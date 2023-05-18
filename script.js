@@ -1,12 +1,17 @@
 const mainContainer = document.querySelector(".main-container");
-createEtchaSketch(10);
+createEtchaSketch(10, "normal-mode");
 const resizeGridButton = document.querySelector("#change-grid");
 resizeGridButton.addEventListener("click", newGrid);
 const colorModeButton = document.querySelector("#color-draw-mode");
 colorModeButton.addEventListener("click", colorMode);
-// const shadeModeButton
+const shadeModeButton = document.querySelector("#shade-draw-mode");
+shadeModeButton.addEventListener("click", shadeMode);
+const normalModeButton = document.querySelector("#normal-mode");
+normalModeButton.addEventListener("click", normalMode);
+let currentMode = "normal-mode";
+let currentGridSize = 10;
 
-function createEtchaSketch(gridSize) {
+function createEtchaSketch(gridSize, mode) {
   for (let i = 0; i < gridSize; i++) {
     const horizontalDiv = document.createElement("div");
     horizontalDiv.classList.add("row");
@@ -18,17 +23,23 @@ function createEtchaSketch(gridSize) {
     mainContainer.appendChild(horizontalDiv);
   }
   const boxes = document.querySelectorAll(".box");
-  boxes.forEach((box) => box.addEventListener("mouseover", addInkClass));
-}
-
-function addInkClass(event) {
-  this.classList.add("inked");
+  if (mode === "normal-mode") {
+    boxes.forEach((box) => box.addEventListener("mouseover", addInkClass));
+  } else if (mode === "color-mode") {
+    boxes.forEach((box) => box.addEventListener("mouseover", weirdInk));
+  } else {
+    boxes.forEach((box) => box.addEventListener("mouseover", shadeInk));
+  }
 }
 
 function newGrid() {
-  const gridSize = newGridSize();
+  let gridSize = currentGridSize;
+  if (this.id === "change-grid") {
+    gridSize = newGridSize();
+    currentGridSize = gridSize;
+  }
   mainContainer.textContent = "";
-  createEtchaSketch(gridSize);
+  createEtchaSketch(gridSize, currentMode);
 }
 
 function newGridSize() {
@@ -43,19 +54,41 @@ function newGridSize() {
   return gridSize;
 }
 
-function colorMode() {
+function normalMode() {
+  currentMode = "normal-mode";
   newGrid();
-  const boxes = document.querySelectorAll(".box");
-  boxes.forEach((box) => box.removeEventListener("mouseover", addInkClass));
-  boxes.forEach((box) => box.addEventListener("mouseover", weirdInk));
+}
+function addInkClass() {
+  this.classList.add("inked");
+}
+
+function colorMode() {
+  currentMode = "color-mode";
+  newGrid();
 }
 
 function weirdInk() {
-  console.log(this);
   this.style.cssText = `background-color: rgb(${Math.floor(
     Math.random() * 256
   )}, ${Math.floor(Math.random() * 256)}, ${Math.floor(
     Math.random() * 256
   )});flex: 1;width: auto;height: auto;`;
-  console.log(this);
+}
+
+function shadeMode() {
+  currentMode = "shade-mode";
+  newGrid();
+}
+
+function shadeInk() {
+  if (getComputedStyle(this).backgroundColor.length === 22) {
+    return;
+  } else if (getComputedStyle(this).backgroundColor.length === 18) {
+    this.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
+    return;
+  } else {
+    alpha =
+      parseFloat(getComputedStyle(this).backgroundColor.split(",")[3]) - 0.1;
+    this.style.backgroundColor = `rgba(255,255,255,${alpha})`;
+  }
 }
