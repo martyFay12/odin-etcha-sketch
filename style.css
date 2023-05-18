@@ -1,3 +1,8 @@
+* {
+  font-family: "VT323", monospace;
+  color: whitesmoke;
+}
+
 html,
 body {
   margin: 0;
@@ -13,7 +18,7 @@ body {
 
 button {
   margin-bottom: 20px;
-  background-color: green;
+  background-color: rgb(175, 100, 240);
   color: white;
   padding: 10px 20px;
   font-size: 20px;
@@ -29,7 +34,7 @@ button:hover {
   width: 700px;
   height: 700px;
   border-radius: 10px;
-  border: solid red 30px;
+  border: solid rgb(209, 63, 126) 30px;
 }
 
 .row {
