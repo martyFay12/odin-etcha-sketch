@@ -2,6 +2,9 @@ const mainContainer = document.querySelector(".main-container");
 createEtchaSketch(10);
 const resizeGridButton = document.querySelector("#change-grid");
 resizeGridButton.addEventListener("click", newGrid);
+const colorModeButton = document.querySelector("#color-draw-mode");
+colorModeButton.addEventListener("click", colorMode);
+// const shadeModeButton
 
 function createEtchaSketch(gridSize) {
   for (let i = 0; i < gridSize; i++) {
@@ -38,4 +41,21 @@ function newGridSize() {
     );
   }
   return gridSize;
+}
+
+function colorMode() {
+  newGrid();
+  const boxes = document.querySelectorAll(".box");
+  boxes.forEach((box) => box.removeEventListener("mouseover", addInkClass));
+  boxes.forEach((box) => box.addEventListener("mouseover", weirdInk));
+}
+
+function weirdInk() {
+  console.log(this);
+  this.style.cssText = `background-color: rgb(${Math.floor(
+    Math.random() * 256
+  )}, ${Math.floor(Math.random() * 256)}, ${Math.floor(
+    Math.random() * 256
+  )});flex: 1;width: auto;height: auto;`;
+  console.log(this);
 }
