@@ -1,7 +1,5 @@
 const mainContainer = document.querySelector(".main-container");
 createEtchaSketch(10);
-const boxes = document.querySelectorAll(".box");
-boxes.forEach((box) => box.addEventListener("mouseover", addInkClass));
 const resizeGridButton = document.querySelector("#change-grid");
 resizeGridButton.addEventListener("click", newGrid);
 
@@ -16,15 +14,20 @@ function createEtchaSketch(gridSize) {
     }
     mainContainer.appendChild(horizontalDiv);
   }
+  const boxes = document.querySelectorAll(".box");
+  boxes.forEach((box) => box.addEventListener("mouseover", addInkClass));
 }
 
 function addInkClass(event) {
   this.classList.add("inked");
 }
 
-function newGrid(event) {
+function newGrid() {
   const gridSize = newGridSize();
+  mainContainer.textContent = "";
+  createEtchaSketch(gridSize);
 }
+
 function newGridSize() {
   let gridSize = parseInt(prompt("Enter a new grid size between 10 and 100"));
   while (gridSize < 10 || gridSize > 100 || isNaN(gridSize)) {
