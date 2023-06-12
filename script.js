@@ -38,14 +38,12 @@ function createEtchaSketch(gridSize, mode) {
 }
 
 function newGrid() {
-  let gridSize = currentGridSize;
   // only change grid size if this call was the result of a 'custom grid size' button push.
   if (this.id === "change-grid") {
-    gridSize = newGridSize();
-    currentGridSize = gridSize;
+    currentGridSize = newGridSize();
   }
   mainContainer.textContent = "";
-  createEtchaSketch(gridSize, currentMode);
+  createEtchaSketch(currentGridSize, currentMode);
 }
 
 function newGridSize() {
